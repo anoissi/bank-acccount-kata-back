@@ -1,0 +1,128 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-table-account
+      author: anoi
+      changes:
+        - createTable:
+            tableName: account
+            columns:
+              - column:
+                  name: balance
+                  type: numeric(38,2)
+              - column:
+                  name: account_id
+                  type: uuid
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: client_id
+                  type: uuid
+            remarks: "Table for storing account information"
+            context: development
+
+  - changeSet:
+      id: create-table-client
+      author: anoi
+      changes:
+        - createTable:
+            tableName: client
+            columns:
+              - column:
+                  name: client_id
+                  type: uuid
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: email_address
+                  type: varchar(255)
+              - column:
+                  name: first_name
+                  type: varchar(255)
+              - column:
+                  name: last_name
+                  type: varchar(255)
+            remarks: "Table for storing client information"
+            context: development
+
+  - changeSet:
+      id: create-table-operation
+      author: anoi
+      changes:
+        - createTable:
+            tableName: operation
+            columns:
+              - column:
+                  name: amount
+                  type: numeric(38,2)
+              - column:
+                  name: date
+                  type: timestamp(6)
+              - column:
+                  name: account_id
+                  type: uuid
+              - column:
+                  name: operation_id
+                  type: uuid
+                  constraints:
+                    primaryKey: true
+            remarks: "Table for storing operation information"
+            context: development
+
+  - changeSet:
+      id: add-foreign-key-account-client_id
+      author: anoi
+      changes:
+        - addForeignKeyConstraint:
+            baseTableName: account
+            baseColumnNames: client_id
+            referencedTableName: client
+            referencedColumnNames: client_id
+            constraintName: foreign-key-account-client_id
+            onDelete: CASCADE
+            onUpdate: CASCADE
+
+  - changeSet:
+      id: add-foreign-key-operation-account_id
+      author: anoi
+      changes:
+        - addForeignKeyConstraint:
+            baseTableName: operation
+            baseColumnNames: account_id
+            referencedTableName: account
+            referencedColumnNames: account_id
+            constraintName: foreign-key-operation-account_id
+            onDelete: CASCADE
+            onUpdate: CASCADE
+
+  - changeSet:
+      id: insert-data-client
+      author: anoi
+      changes:
+        - loadData:
+            file: db/data/client_data.csv
+            tableName: client
+            separator: ','
+            primaryKey: client_id
+      context: development
+
+  - changeSet:
+      id: insert-data-account
+      author: anoi
+      changes:
+        - loadData:
+            file: db/data/account_data.csv
+            tableName: account
+            separator: ','
+            primaryKey: account_id
+      context: development
+
+  - changeSet:
+      id: insert-data-operation
+      author: anoi
+      changes:
+        - loadData:
+            file: db/data/operation_data.csv
+            tableName: operation
+            separator: ','
+            primaryKey: operation_id
+      context: development

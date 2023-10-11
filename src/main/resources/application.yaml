@@ -1,0 +1,16 @@
+spring:
+  datasource:
+    username: postgres
+    url: jdbc:postgresql://localhost:5432/bakata
+    password: admin
+  liquibase:
+    #enabled: false
+  jpa:
+    show-sql: true
+    hibernate:
+      #ddl-auto: create
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
